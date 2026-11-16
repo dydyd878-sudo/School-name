@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="School Time">
+<meta name="theme-color" content="#0a84ff">
+<title>School Time</title>
+<style>
+:root{--bg:#f2f2f7;--card:#fff;--tx:#111;--sub:#6e6e73;--ac:#0a84ff;--line:rgba(60,60,67,.14);--fill:rgba(120,120,128,.12);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000;--card:#1c1c1e;--tx:#f5f5f7;--sub:#98989f;--line:rgba(255,255,255,.12);--fill:rgba(120,120,128,.28);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#000;--card:#1c1c1e;--tx:#f5f5f7;--sub:#98989f;--line:rgba(255,255,255,.12);--fill:rgba(120,120,128,.28);color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:-apple-system,"SF Pro Text","Heebo","Segoe UI",Arial,sans-serif;min-height:100%}
+#app{max-width:520px;margin:0 auto;padding:18px 16px 110px}
+.date{color:var(--sub);font-size:15px;margin:4px 4px 0}
+h1{font-size:32px;margin:2px 4px 16px;letter-spacing:-.5px}
+.hero{border-radius:28px;padding:24px 22px;color:#fff;box-shadow:0 14px 34px rgba(10,132,255,.28);background:linear-gradient(145deg,#0a84ff,#5e5ce6)}
+.hero.brk{background:linear-gradient(145deg,#30d158,#0a9d8f);box-shadow:0 14px 34px rgba(48,209,88,.25)}
+.hero.idle{background:linear-gradient(145deg,#636366,#3a3a3c);box-shadow:0 14px 34px rgba(0,0,0,.2)}
+.pill{display:inline-block;background:rgba(255,255,255,.22);padding:5px 12px;border-radius:99px;font-size:13px;font-weight:600}
+.ttl{font-size:30px;font-weight:700;margin:12px 0 2px;letter-spacing:-.3px}
+.meta{opacity:.85;font-size:15px;direction:rtl}
+.big{font-size:68px;font-weight:300;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:isolate;text-align:center;margin:18px 0 0;letter-spacing:-1px;line-height:1}
+.lbl{text-align:center;opacity:.9;font-size:15px;margin:6px 0 16px}
+.bar{height:8px;border-radius:9px;background:rgba(255,255,255,.25);overflow:hidden}
+.bar i{display:block;height:100%;background:#fff;border-radius:9px;float:right}
+.card{background:var(--card);border-radius:22px;padding:16px 18px;margin-top:14px;box-shadow:0 1px 0 var(--line)}
+.card small{color:var(--sub);font-size:13px;font-weight:600}
+.card .n{font-size:22px;font-weight:650;margin:4px 0 2px}
+.card .s{color:var(--sub);font-size:15px}
+.card .cdn{color:var(--ac);font-weight:600;margin-top:8px;font-variant-numeric:tabular-nums}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;scrollbar-width:none}
+.chip{flex:0 0 auto;border:0;background:var(--card);color:var(--tx);padding:10px 16px;border-radius:99px;font:600 15px inherit;font-family:inherit}
+.chip.on{background:var(--ac);color:#fff}
+.row{display:flex;align-items:center;gap:12px;background:var(--card);padding:14px 16px;border-bottom:1px solid var(--line)}
+.rows{border-radius:20px;overflow:hidden;margin-bottom:14px}
+.rows .row:last-child{border-bottom:0}
+.row.now{background:rgba(10,132,255,.14)}
+.num{width:34px;height:34px;border-radius:11px;background:var(--fill);display:grid;place-items:center;font-weight:700;flex:0 0 auto}
+.row.now .num{background:var(--ac);color:#fff}
+.row .t{flex:1;font-weight:600;font-size:17px}
+.row .tm{color:var(--sub);font-size:14px;direction:ltr;unicode-bidi:isolate}
+.gap{background:var(--card);color:#30b45a;font-size:13px;font-weight:600;padding:6px 16px;border-bottom:1px solid var(--line);text-align:center}
+.sec{color:var(--sub);font-size:13px;font-weight:600;margin:20px 8px 8px}
+input[type=text],input[type=time]{font:inherit;font-size:16px;color:var(--tx);background:var(--fill);border:0;border-radius:11px;padding:9px 10px;min-width:0}
+input[type=text]{flex:1}
+input[type=time]{direction:ltr;width:104px}
+.btn{width:100%;border:0;border-radius:16px;padding:14px;font:600 16px inherit;font-family:inherit;background:var(--card);color:var(--ac);margin-bottom:10px}
+.btn.red{color:#ff453a}
+.x{border:0;background:var(--fill);color:#ff453a;width:32px;height:32px;border-radius:50%;font-size:18px;flex:0 0 auto}
+.hint{color:var(--sub);font-size:13px;margin:0 8px 14px;line-height:1.5}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;gap:4px;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border-top:1px solid var(--line)}
+nav button{flex:1;max-width:160px;border:0;background:none;color:var(--sub);font:600 11px inherit;font-family:inherit;padding:4px;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button span{font-size:22px;filter:grayscale(1);opacity:.7}
+nav button.on{color:var(--ac)}
+nav button.on span{filter:none;opacity:1}
+.col{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}
+.s2{font-weight:400;font-size:13px;color:var(--sub);margin-top:2px}.dn{font-weight:600;font-size:14px;white-space:nowrap}.two{display:flex;gap:6px}.two input{min-width:0;width:50%}
+input[type=date]{font:inherit;font-size:16px;color:var(--tx);background:var(--fill);border:0;border-radius:11px;padding:9px 10px;direction:ltr}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav id="nav"></nav>
+<script>
+var KEY='schooltime.v2',DAYS=['ראשון','שני','שלישי','רביעי','חמישי'];
+var P0=[['08:10','08:55'],['09:00','09:45'],['09:50','10:35'],['11:00','11:45'],['11:50','12:35'],['12:45','13:30'],['13:35','14:20'],['14:25','15:10']];
+var D0=[
+['תרבות יהודית-ישראלית|412|כהן עדן','ערבית|412|אביסרור טיראן','אנגלית|412|אנג׳ל אדווה','אנגלית|412|אנג׳ל אדווה','תנ״ך|412|אלון ספיר','חינוך גופני||שם עירית','מתמטיקה|412|חקלו נטליה','מתמטיקה|412|חקלו נטליה'],
+['מתמטיקה|412|חקלו נטליה','מתמטיקה|412|חקלו נטליה','כימיה|412|אדרי שירן','ספרות|412|דר ורדה','תנ״ך|412|אלון ספיר','של״ח|412|זהר בלאי','היסטוריה|412|נסים-פור טנא הלפמן שרונה','כימיה|55|אדרי שירן'],
+['חינוך / כישורי חיים|412|אנג׳ל אדווה / מידר הגר','פיזיקה|613|אבירם גיתית','פיזיקה|412|אבירם גיתית','מתמטיקה|412|חקלו נטליה','מתמטיקה|412|חקלו נטליה','ספרות|412|דר ורדה','',''],
+['היסטוריה|412|נסים-פור טנא הלפמן שרונה','ערבית|412|אביסרור טיראן','מדעי המחשב|603|אדרי עידו','מדעי המחשב|603|אדרי עידו','אזרחות|412|מצרי איה','עברית|412|אלדד אלה','אנגלית|412|אנג׳ל אדווה','אנגלית|412|אנג׳ל אדווה'],
+['חינוך|412|אנג׳ל אדווה','ביולוגיה|613|תורג׳מן עדנה','ביולוגיה|412|תורג׳מן עדנה','עברית|412|אלדד אלה','עברית|412|אלדד אלה','מתמטיקה|412|חקלו נטליה','אזרחות|412|מצרי איה','חינוך גופני||שם עירית']
+];
+function def(){function f(k){return D0.map(function(d){return d.map(function(s){return s.split('|')[k]||''})})}return{periods:P0.map(function(p){return p.slice()}),subjects:f(0),room:f(1),teach:f(2),end:'2027-06-20',endLbl:'סוף שנת הלימודים'}}
+function load(){try{var r=localStorage.getItem(KEY);if(r){var o=JSON.parse(r);if(o&&o.periods&&o.subjects)return o}}catch(e){}return def()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+var S=load(),view='now',sd=Math.min(Math.max(new Date().getDay(),0),4);
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function tm(s){var a=(s||'').split(':');return a.length==2?(+a[0])*60+(+a[1]):NaN}
+function pad(n){return String(n).padStart(2,'0')}
+var EX=[['2026-10-13','פיזיקה','בוחן'],['2026-10-14','מדעי המחשב','בוחן'],['2026-10-20','מתמטיקה','מבחן'],['2026-10-25','כימיה','מבחן שכבתי'],['2026-10-28','מדעי המחשב','מבחן'],['2026-11-01','אנגלית','בוחן אוצר מילים'],['2026-11-03','פיזיקה','מבחן'],['2026-11-05','ערבית','מבחן שכבתי'],['2026-11-08','תנ״ך','מבחן שכבתי'],['2026-11-10','ביולוגיה','מבחן שכבתי'],['2026-11-12','היסטוריה','מבחן שכבתי'],['2026-11-19','ספרות','מבחן שכבתי'],['2026-11-22','עברית','מבחן שכבתי'],['2026-11-24','מתמטיקה','מבחן'],['2026-11-29','אנגלית','אנסין (Unseen)'],['2026-12-16','אנגלית','מבחן'],['2027-01-13','מדעי המחשב','מבחן'],['2027-01-17','אנגלית','אנסין (Unseen)'],['2027-01-19','פיזיקה','בוחן'],['2027-01-26','מתמטיקה','מבחן'],['2027-01-31','עברית','מבחן שכבתי'],['2027-02-03','ביולוגיה','מבחן שכבתי'],['2027-02-18','ערבית','מבחן שכבתי'],['2027-02-21','היסטוריה','מבחן שכבתי'],['2027-02-24','מדעי המחשב','מבחן'],['2027-02-28','אנגלית','בוחן אוצר מילים'],['2027-03-02','ספרות','מבחן שכבתי'],['2027-03-09','כימיה','מבחן שכבתי'],['2027-03-16','אזרחות','מבחן שכבתי'],['2027-03-25','תנ״ך','מבחן שכבתי'],['2027-03-28','אנגלית','מבחן'],['2027-03-30','מתמטיקה','מבחן'],['2027-04-06','פיזיקה','מבחן'],['2027-04-11','אנגלית','אנסין (Unseen)']];
+var exm='sub';
+var EV=[['2026-11-16','יום הזיכרון לדוד בן גוריון ז״ל','e'],['2026-11-16','הרצאה “פאודה – האמת שמאחורי הקלעים”, 11:00–12:30 באשטרום','e'],['2026-11-17','ערב הורים – גיליון ציוני רבע א׳','e'],['2026-11-17','יום למידה מקוונת – כלל בית הספר','o'],['2026-11-23','“מכתב לאבא” – הצגה במשכן לאומנויות הבמה, 11:00','e'],['2026-12-01','הרצאה “מחושך לאור” – סבג ליבי','e'],['2026-12-01','חזרה גנרלית לתחרות הת״ס (אולם ספורט סגור)','e'],['2026-12-02','תחרות ת״ס – ערב','e'],['2026-12-03','תחרות ת״ס – בוקר','e'],['2026-12-04','ערב נר ראשון של חנוכה','h'],['2026-12-05','חנוכה','h','2026-12-12'],['2026-12-17','ט׳2 – מרכז טכנולוגי','e'],['2026-12-20','צום עשרה בטבת','h'],['2026-12-22','ציון יום זאב ז׳בוטינסקי ז״ל','e'],['2026-12-23','סגירת הרשמה למועדי ב׳ – מחצית א׳','e'],['2026-12-27','מועד ב׳ ראשון','e'],['2026-12-30','יום למידה מקוונת – כלל בית הספר','o'],['2026-12-31','מועד ב׳ שני','e'],['2027-01-03','הסבר מנהלת בית הספר על חטיבה עליונה','e','2027-01-07'],['2027-01-05','פתיחת המשו״ב להזנת ציוני מחצית א׳','e'],['2027-01-05','“גליץ” – מופע מוזיקלי במשכן לאומנויות הבמה, 09:30','e'],['2027-01-07','יום שדה לכיתה ט׳2','e'],['2027-01-10','שבוע הצדעה לנשות ולאנשי החינוך','e','2027-01-14'],['2027-01-10','יום ספורט','e'],['2027-01-12','סיום מחצית א׳ · מרוץ “רצים לאורם”','e'],['2027-01-13','התחלת מחצית ב׳','e'],['2027-01-14','ט׳2 – מרכז טכנולוגי','e'],['2027-01-19','יום התרמה ארצי למען אקי״ם, סוכרת נעורים','e'],['2027-01-20','יום למידה מקוונת – כלל בית הספר','o'],['2027-01-23','ט״ו בשבט','h'],['2027-01-31','שבוע עמ״ט','e','2027-02-05'],['2027-01-31','פופרה – שבוע טכני (חזרות והכנות)','e','2027-02-05'],['2027-02-02','יום דיאלוג וחלוקת תעודות מחצית א׳ (בוקר)','e'],['2027-02-07','פופרה','e','2027-02-10'],['2027-02-11','פופרה – מופע חגיגי · ט׳2 – מרכז טכנולוגי','e'],['2027-02-14','טיול שנתי – אזור הכרמל ומישור חוף הכרמל','e','2027-02-15'],['2027-02-25','יום למידה מקוונת – כלל בית הספר','o'],['2027-02-28','שבוע חירום ארצי','e','2027-03-04'],['2027-03-01','ישיבת הנהלה פתוחה','e'],['2027-03-02','תרגיל התגוננות ארצי','e'],['2027-03-04','יום שדה לכיתה ט׳2','e'],['2027-03-11','ט׳2 – סיור מטעם המרכז הטכנולוגי','e'],['2027-03-18','יום הזיכרון ליוסף טרומפלדור ז״ל','e'],['2027-03-21','קרנבל פורים','e'],['2027-03-22','תענית אסתר','h'],['2027-03-22','יום למידה מקוונת – כלל בית הספר','o'],['2027-03-23','פורים','h'],['2027-03-24','שושן פורים','h'],['2027-03-30','בוקר ספרות ע״ש ברנרד יעקובוביץ ז״ל, 09:00','e'],['2027-04-04','הפקת גיליונות רבע ג׳ לערב הורים','e'],['2027-04-07','ערב הורים – גיליון ציוני רבע ג׳ · סיום תהליך ההכוון','e'],['2027-04-07','יום למידה מקוונת – כלל בית הספר','o'],['2027-04-13','חופשת פסח','h','2027-04-20'],['2027-04-21','ערב פסח','h'],['2027-04-22','פסח','h','2027-04-28'],['2027-04-29','איסרו חג פסח','h'],['2027-04-29','יום למידה מקוונת – כלל בית הספר','o'],['2027-05-03','ערב יום הזיכרון לשואה ולגבורה','h'],['2027-05-04','יום הזיכרון לשואה ולגבורה','h'],['2027-05-05','מחזמר באנגלית – חזרה גנרלית','e'],['2027-05-06','מחזמר באנגלית – מופעי בוקר וערב','e'],['2027-05-09','סגירת הרשמה למועדי ב׳ – מחצית ב׳','e'],['2027-05-10','ערב יום הזיכרון לחללי מערכות ישראל ולנפגעי פעולות האיבה','h'],['2027-05-11','יום הזיכרון לחללי מערכות ישראל ולנפגעי פעולות האיבה','h'],['2027-05-12','יום העצמאות','h'],['2027-05-16','מועד ב׳ ראשון – החל משעה 12:00','e'],['2027-05-17','ציון יום בנימין זאב הרצל ז״ל','e'],['2027-05-20','מועד ב׳ שני – החל משעה 12:00','e'],['2027-05-25','ל״ג בעומר','h'],['2027-05-25','יום למידה מקוונת – כלל בית הספר','o'],['2027-05-27','ט׳2 – מרכז טכנולוגי','e'],['2027-06-03','הפנינג לכבוד יום ירושלים – סבג ליבי','e'],['2027-06-04','יום ירושלים','h'],['2027-06-09','יום ההורה המתנדב','e'],['2027-06-10','ערב חג שבועות','h'],['2027-06-11','חג שבועות','h'],['2027-06-12','איסרו חג שבועות','h'],['2027-06-15','ערב מצוינות ע״ש איטן פלד ז״ל (בסינמה סיטי), 17:00','e'],['2027-06-16','החזרת ספרי לימוד','e'],['2027-06-20','סיום שנת הלימודים · יום דיאלוג וחלוקת תעודות','e']];
+function dfs(s){return new Date(s+'T00:00:00').toLocaleDateString('he-IL',{weekday:'short',day:'numeric',month:'short'})}
+function evUp(e){return dl(e[3]||e[0])>=0}
+function evRow(e){var d=dl(e[0]),z=e[3]?dl(e[3]):d,on=d<0&&z>=0,ic={h:'\ud83c\udf34',o:'\ud83d\udcbb',e:'\ud83d\udccc'}[e[2]],c=on?'#30b45a':d<=2?'#ff453a':d<=7?'#ff9f0a':'var(--ac)',dt=e[3]?dfs(e[0])+' – '+dfs(e[3]):dfx(e[0]);return '<div class="row"><div class="num">'+ic+'</div><div class="t">'+esc(e[1])+'<div class="s2">'+dt+'</div></div><div class="dn" style="color:'+c+'">'+(on?'מתקיים עכשיו':dtx(d))+'</div></div>'}
+function evList(){var u=EV.filter(evUp);return u.length?'<div class="rows">'+u.map(evRow).join('')+'</div>':'<div class="card"><div class="n">אין אירועים קרובים</div></div>'}
+function allList(){var A=[];EX.filter(function(e){return dl(e[0])>=0}).forEach(function(e){A.push([e[0],exRow(e,1)])});EV.filter(evUp).forEach(function(e){A.push([dl(e[0])<0?'0':e[0],evRow(e)])});A.sort(function(a,b){return a[0]<b[0]?-1:a[0]>b[0]?1:0});return '<div class="rows">'+A.map(function(a){return a[1]}).join('')+'</div>'}
+function dl(s){var t=new Date(s+'T00:00:00'),n=new Date();n.setHours(0,0,0,0);return Math.round((t-n)/864e5)}
+function dtx(d){return d<0?'עבר':d==0?'היום!':d==1?'מחר':'בעוד '+d+' ימים'}
+function dfx(s){var t=new Date(s+'T00:00:00');return t.toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long'})+(t.getFullYear()==2027?' 2027':'')}
+function exRow(e,s){var d=dl(e[0]),c=d<0?'var(--sub)':d<=2?'#ff453a':d<=7?'#ff9f0a':'var(--ac)';return '<div class="row" style="'+(d<0?'opacity:.45':'')+'">'+(s?'<div class="num">\ud83d\udcdd</div>':'')+'<div class="t">'+esc(s?e[1]:e[2])+'<div class="s2">'+(s?esc(e[2])+' · ':'')+dfx(e[0])+'</div></div><div class="dn" style="color:'+c+'">'+(d<0?'✓ עבר':dtx(d))+'</div></div>'}
+function exNext(){return EX.filter(function(e){return dl(e[0])>=0}).sort(function(a,b){return a[0]<b[0]?-1:1})[0]}
+function exCard(){var n=exNext();if(!n)return '';return '<div class="card"><small>המבחן הבא</small><div class="n">'+esc(n[1])+' · '+esc(n[2])+'</div><div class="s">'+dfx(n[0])+'</div><div class="cdn">'+dtx(dl(n[0]))+'</div></div>'}
+var BK='schooltime.bus',B=(function(){try{return JSON.parse(localStorage.getItem(BK))||{}}catch(e){return{}}})(),bres='',API='https://open-bus-stride-api.hasadna.org.il';
+B.stop=B.stop||'12722';B.lines=B.lines||'33,27';
+function bsave(){try{localStorage.setItem(BK,JSON.stringify(B))}catch(e){}}
+async function bget(p,log){var r,t;try{r=await fetch(API+p);t=await r.text()}catch(e){log.push('GET '+p+' → '+e.message);throw e}log.push('GET '+p+' → '+r.status+'\n'+t.slice(0,600));if(!r.ok)throw new Error('HTTP '+r.status);return JSON.parse(t)}
+async function busGo(){
+ var el=document.getElementById('bus'),log=[],out='';
+ el.innerHTML='<div class="card"><div class="s">טוען…</div></div>';
+ try{
+  var st=await bget('/gtfs_stops/list?limit=1&order_by='+encodeURIComponent('date desc')+'&code='+encodeURIComponent(B.stop.trim()),log);
+  if(!st.length)throw new Error('התחנה לא נמצאה');
+  var s=st[0],la=+s.lat,lo=+s.lon,d=.01;
+  out+='<div class="card"><small>תחנה '+esc(String(s.code))+'</small><div class="n">'+esc(s.name||'')+'</div><div class="s">'+esc(s.city||'')+'</div></div>';
+  var q='/siri_vehicle_locations/list?limit=100&order_by='+encodeURIComponent('recorded_at_time desc')+'&recorded_at_time_from='+encodeURIComponent(new Date(Date.now()-6e5).toISOString())+'&recorded_at_time_to='+encodeURIComponent(new Date().toISOString())+'&lat__greater_or_equal='+(la-d)+'&lat__lower_or_equal='+(la+d)+'&lon__greater_or_equal='+(lo-d)+'&lon__lower_or_equal='+(lo+d);
+  var v=await bget(q,log),seen={},rows='';
+  v.forEach(function(x){var k=x.siri_ride__vehicle_ref||x.vehicle_ref||x.id;if(seen[k])return;seen[k]=1;var ago=Math.max(0,Math.round((Date.now()-new Date(x.recorded_at_time))/6e4));rows+='<div class="row"><div class="num">🚌</div><div class="t">קו '+esc(x.siri_route__line_ref||'?')+'<div class="s2">רכב '+esc(k)+' · לפני '+ago+' דק׳</div></div><div class="dn">'+(x.velocity!=null?Math.round(x.velocity)+' קמ״ש':'')+'</div></div>'});
+  out+=rows?'<div class="sec">אוטובוסים ליד התחנה (10 דקות אחרונות)</div><div class="rows">'+rows+'</div>':'<div class="card"><div class="s">לא נמצאו אוטובוסים ליד התחנה ב-10 הדקות האחרונות.</div></div>';
+  var L=B.lines.split(/[ ,]+/).filter(Boolean);
+  for(var i=0;i<L.length;i++){try{await bget('/gtfs_routes/list?limit=5&order_by='+encodeURIComponent('date desc')+'&route_short_name='+encodeURIComponent(L[i]),log)}catch(e){}}
+ }catch(e){
+  out+='<div class="card"><small>שגיאה</small><div class="n">'+(/HTTP|התחנה/.test(e.message)?esc(e.message):'הבקשה נחסמה או שאין חיבור')+'</div><div class="s">אם הדף נפתח דרך claude.ai, הגישה לממשק חסומה. הפעל את הגרסה המתאחסנת.</div></div>';
+ }
+ out+='<details class="card"><summary>אבחון</summary><pre style="white-space:pre-wrap;direction:ltr;font-size:11px;overflow-x:auto">'+esc(log.join('\n\n'))+'</pre></details>';
+ bres=out;el.innerHTML=out;
+}
+function renderBus(){
+ $a('<h1 style="margin-top:12px">אוטובוס</h1><div class="rows"><div class="row"><div class="t">מספר תחנה</div><input type="text" inputmode="numeric" value="'+esc(B.stop)+'" oninput="B.stop=this.value;bsave()" style="flex:0 0 110px;direction:ltr;text-align:center"></div><div class="row"><div class="t">קווים</div><input type="text" value="'+esc(B.lines)+'" oninput="B.lines=this.value;bsave()" style="flex:0 0 110px;direction:ltr;text-align:center"></div></div><button class="btn" onclick="busGo()">בדוק עכשיו</button><div id="bus">'+bres+'</div><p class="hint">גרסת ניסוי. הנתונים מגיעים מ-Open Bus Stride ומתעדכנים כפעם בדקה. האבחון מראה מה הממשק החזיר.</p>');
+}
+function renderEx(){
+ var h='<h1 style="margin-top:12px">מבחנים ואירועים</h1><div class="chips"><button class="chip'+(exm=='sub'?' on':'')+'" onclick="exm=\'sub\';render()">מבחנים לפי מקצוע</button><button class="chip'+(exm=='date'?' on':'')+'" onclick="exm=\'date\';render()">הכל לפי תאריך</button><button class="chip'+(exm=='ev'?' on':'')+'" onclick="exm=\'ev\';render()">אירועים</button></div>';
+ var L=EX.slice().sort(function(a,b){return a[0]<b[0]?-1:1});
+ if(exm=='ev'){h+=evList()}else if(exm=='date'){h+=allList()}else if(0){var u=L.filter(function(e){return dl(e[0])>=0});h+=u.length?'<div class="rows">'+u.map(function(e){return exRow(e,1)}).join('')+'</div>':'<div class="card"><div class="n">אין מבחנים קרובים 🎉</div></div>'}
+ else{var M={};L.forEach(function(e){(M[e[1]]=M[e[1]]||[]).push(e)});
+  var f=function(k){var n=M[k].filter(function(e){return dl(e[0])>=0})[0];return n?n[0]:'9'};
+  Object.keys(M).sort(function(a,b){return f(a)<f(b)?-1:f(a)>f(b)?1:0}).forEach(function(k){h+='<div class="sec">'+esc(k)+'</div><div class="rows">'+M[k].map(function(e){return exRow(e,0)}).join('')+'</div>'})}
+ h+='<p class="hint">לפי לוח האירועים והמבחנים של ט׳2 תשפ״ז. ייתכנו שינויים, ויישלחו הודעות עדכון מבית הספר.</p>';
+ $a(h)
+}
+function gv(a,d,i){return((a||[])[d]||[])[i]||''}
+function inf(p){var a=[p.r?'חדר '+p.r:'',p.t].filter(Boolean);return a.length?'<div class="s">'+esc(a.join(' · '))+'</div>':''}
+function yearCard(){var t=new Date((S.end||'2027-06-20')+'T00:00:00'),n=new Date();n.setHours(0,0,0,0);var d=Math.round((t-n)/864e5);if(isNaN(d))return '';return '<div class="card"><small>'+esc(S.endLbl||'סוף שנת הלימודים')+'</small><div class="n">'+(d>0?d+' ימים':d==0?'היום! 🎉':'הגיע! 🌴')+'</div><div class="s">'+(d>0?'עד '+t.toLocaleDateString('he-IL',{day:'numeric',month:'long',year:'numeric'})+' · כ-'+Math.ceil(d/7)+' שבועות':'')+'</div></div>'}
+function cd(s){s=Math.max(0,Math.ceil(s));var h=Math.floor(s/3600),m=Math.floor(s%3600/60),r=s%60;return h?h+':'+pad(m)+':'+pad(r):pad(m)+':'+pad(r)}
+function per(di){var r=[];S.periods.forEach(function(p,i){var s=tm(p[0])*60,e=tm(p[1])*60;if(!isNaN(s)&&!isNaN(e)&&e>s)r.push({i:i,s:s,e:e,n:((S.subjects[di]||[])[i]||'').trim()||'שיעור פנוי',a:p[0],b:p[1],r:gv(S.room,di,i).trim(),t:gv(S.teach,di,i).trim()})});return r}
+function nextCard(p,txt,extra){return '<div class="card"><small>'+txt+'</small><div class="n">'+esc(p.n)+'</div><div class="s">שיעור '+(p.i+1)+' · '+p.a+'–'+p.b+'</div>'+inf(p)+(extra?'<div class="cdn">'+extra+'</div>':'')+'</div>'}
+function head(d){return '<div class="date">'+d.toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long'})+'</div><h1>School Time</h1>'}
+function renderNow(){
+ var d=new Date(),dow=d.getDay(),sec=d.getHours()*3600+d.getMinutes()*60+d.getSeconds(),di=dow<=4?dow:-1,L=di<0?[]:per(di),h=head(d);
+ var cur=L.filter(function(p){return sec>=p.s&&sec<p.e})[0];
+ if(cur){
+  var nx=L[L.indexOf(cur)+1],pr=(sec-cur.s)/(cur.e-cur.s)*100;
+  h+='<div class="hero"><span class="pill">שיעור '+(cur.i+1)+'</span><div class="ttl">'+esc(cur.n)+'</div><div class="meta">'+cur.a+'–'+cur.b+(cur.r?' · חדר '+esc(cur.r):'')+(cur.t?' · '+esc(cur.t):'')+'</div><div class="big">'+cd(cur.e-sec)+'</div><div class="lbl">עד סוף השיעור</div><div class="bar"><i style="width:'+pr.toFixed(1)+'%"></i></div></div>';
+  h+=nx?nextCard(nx,'השיעור הבא','מתחיל בעוד '+cd(nx.s-sec)+(nx.s>cur.e?' · כולל הפסקה של '+Math.round((nx.s-cur.e)/60)+' דק׳':'')):'<div class="card"><small>השיעור הבא</small><div class="n">זה השיעור האחרון להיום 🎉</div></div>';
+ }else if(L.length&&sec<L[0].s){
+  h+='<div class="hero idle"><span class="pill">לפני הלימודים</span><div class="ttl">בוקר טוב ☀️</div><div class="meta">השיעור הראשון: '+esc(L[0].n)+'</div><div class="big">'+cd(L[0].s-sec)+'</div><div class="lbl">עד תחילת שיעור 1</div></div>'+nextCard(L[0],'השיעור הראשון','בשעה '+L[0].a);
+ }else{
+  var pv=L.filter(function(p){return p.e<=sec}).pop(),nx2=L.filter(function(p){return p.s>sec})[0];
+  if(pv&&nx2){
+   var pr2=(sec-pv.e)/(nx2.s-pv.e)*100;
+   h+='<div class="hero brk"><span class="pill">הפסקה</span><div class="ttl">הפסקה 🍎</div><div class="meta">'+pv.b+'–'+nx2.a+'</div><div class="big">'+cd(nx2.s-sec)+'</div><div class="lbl">עד סוף ההפסקה</div><div class="bar"><i style="width:'+pr2.toFixed(1)+'%"></i></div></div>'+nextCard(nx2,'השיעור הבא','מתחיל בעוד '+cd(nx2.s-sec));
+  }else{
+   var k=dow<=3?1:dow==4?3:dow==5?2:1,nd=dow<=3?dow+1:0,F=per(nd)[0],wk=dow>=5;
+   h+='<div class="hero idle"><span class="pill">'+(wk?'סוף שבוע':'סוף יום')+'</span><div class="ttl">'+(wk?'סוף שבוע נעים 😎':'היום נגמר 🎉')+'</div><div class="meta">נתראה ב'+(k==1?'מחר':'יום '+DAYS[nd])+'</div></div>';
+   if(F){var t=new Date(d);t.setDate(t.getDate()+k);t.setHours(0,0,0,0);h+=nextCard(F,'השיעור הבא · '+(k==1?'מחר':'יום '+DAYS[nd]),'בעוד '+cd((t-d)/1000+F.s))}
+  }
+ }
+ $a(h);
+}
+function $a(h){document.getElementById('app').innerHTML=h+(view=='now'?exCard()+yearCard():'')}
+function chips(){return '<div class="chips">'+DAYS.map(function(n,i){return '<button class="chip'+(i==sd?' on':'')+'" onclick="sd='+i+';render()">'+n+'</button>'}).join('')+'</div>'}
+function renderWeek(){
+ var d=new Date(),sec=d.getHours()*3600+d.getMinutes()*60+d.getSeconds(),L=per(sd),h='<h1 style="margin-top:12px">מערכת שעות</h1>'+chips()+'<div class="rows">';
+ L.forEach(function(p,k){
+  if(k){var g=Math.round((p.s-L[k-1].e)/60);if(g>0)h+='<div class="gap">הפסקה · '+g+' דק׳</div>'}
+  var on=d.getDay()==sd&&sec>=p.s&&sec<p.e;
+  h+='<div class="row'+(on?' now':'')+'"><div class="num">'+(p.i+1)+'</div><div class="t">'+esc(p.n)+(p.r||p.t?'<div style="font-weight:400;font-size:13px;color:var(--sub)">'+esc([p.r?'חדר '+p.r:'',p.t].filter(Boolean).join(' · '))+'</div>':'')+'</div><div class="tm">'+p.a+'–'+p.b+'</div></div>';
+ });
+ $a(h+'</div>');
+}
+function renderSet(){
+ var h='<h1 style="margin-top:12px">הגדרות</h1><div class="sec">מקצועות · בחר יום</div>'+chips()+'<div class="rows">';
+ S.periods.forEach(function(_,i){h+='<div class="row"><div class="num">'+(i+1)+'</div><div class="col"><input type="text" placeholder="שם המקצוע" value="'+esc(gv(S.subjects,sd,i))+'" oninput="setSub('+i+',this.value)"><div class="two"><input type="text" placeholder="חדר" value="'+esc(gv(S.room,sd,i))+'" oninput="setX(\'room\','+i+',this.value)"><input type="text" placeholder="מורה" value="'+esc(gv(S.teach,sd,i))+'" oninput="setX(\'teach\','+i+',this.value)"></div></div></div>'});
+ h+='</div><div class="sec">זמני שיעורים (ההפסקות מחושבות אוטומטית)</div><div class="rows">';
+ S.periods.forEach(function(p,i){
+  if(i){var g=tm(p[0])-tm(S.periods[i-1][1]);if(g>0)h+='<div class="gap">הפסקה · '+g+' דק׳</div>'}
+  h+='<div class="row"><div class="num">'+(i+1)+'</div><input type="time" value="'+p[0]+'" onchange="setT('+i+',0,this.value)"><input type="time" value="'+p[1]+'" onchange="setT('+i+',1,this.value)"><button class="x" onclick="delP('+i+')">×</button></div>';
+ });
+ h+='</div><button class="btn" onclick="addP()">+ הוסף שיעור</button><div class="sec">ספירה לאחור</div><div class="rows"><div class="row"><input type="text" value="'+esc(S.endLbl||'סוף שנת הלימודים')+'" oninput="S.endLbl=this.value;save()"><input type="date" value="'+(S.end||'2027-06-20')+'" onchange="S.end=this.value;save()"></div></div><p class="hint">הנתונים נשמרים במכשיר שלך. כדי שההגדרות יישארו, הזן אותן באפליקציה שנפתחת מהאייקון במסך הבית.</p><button class="btn red" onclick="if(confirm(\'לאפס את כל המערכת?\')){S=def();save();render()}">איפוס למערכת לדוגמה</button>';
+ $a(h);
+}
+function setX(k,i,v){S[k]=S[k]||[];(S[k][sd]=S[k][sd]||[])[i]=v;save()}
+function setSub(i,v){(S.subjects[sd]=S.subjects[sd]||[])[i]=v;save()}
+function setT(i,j,v){S.periods[i][j]=v;save();render()}
+function addP(){var l=S.periods[S.periods.length-1],s=tm(l?l[1]:'08:00')+5,e=s+45,f=function(m){m=Math.min(m,1439);return pad(Math.floor(m/60))+':'+pad(m%60)};S.periods.push([f(s),f(e)]);save();render()}
+function delP(i){if(S.periods.length<2)return;S.periods.splice(i,1);['subjects','room','teach'].forEach(function(k){(S[k]||[]).forEach(function(a){if(a)a.splice(i,1)})});save();render()}
+function render(){
+ var T=[['now','⏱️','עכשיו'],['week','📅','מערכת'],['ex','📝','לוח שנה'],['bus','🚌','אוטובוס'],['set','⚙️','הגדרות']];
+ document.getElementById('nav').innerHTML=T.map(function(t){return '<button class="'+(view==t[0]?'on':'')+'" onclick="view=\''+t[0]+'\';render();scrollTo(0,0)"><span>'+t[1]+'</span>'+t[2]+'</button>'}).join('');
+ if(view=='now')renderNow();else if(view=='week')renderWeek();else if(view=='ex')renderEx();else if(view=='bus')renderBus();else renderSet();
+}
+setInterval(function(){if(view=='now')renderNow()},1000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&view=='now')renderNow()});
+try{var c=document.createElement('canvas');c.width=c.height=180;var x=c.getContext('2d'),g=x.createLinearGradient(0,0,180,180);g.addColorStop(0,'#0a84ff');g.addColorStop(1,'#5e5ce6');x.fillStyle=g;x.fillRect(0,0,180,180);x.strokeStyle='#fff';x.lineWidth=10;x.lineCap='round';x.beginPath();x.arc(90,90,56,0,7);x.stroke();x.beginPath();x.moveTo(90,90);x.lineTo(90,56);x.moveTo(90,90);x.lineTo(114,102);x.stroke();var l=document.createElement('link');l.rel='apple-touch-icon';l.href=c.toDataURL('image/png');document.head.appendChild(l)}catch(e){}
+render();
+</script>
+</body>
+</html>
